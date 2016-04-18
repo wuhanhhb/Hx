@@ -17,10 +17,6 @@ public class Aop {
     private static String packageName = "com.huaxin.common";
     private final static String commonpath = "common\\src\\main\\java\\com\\huaxin\\common\\Request.java";
 
-    final static String[] APPS = {
-            "common", "malsite", "multsite", "hxcloud"
-    };
-
     final static class SUFFIX {
         // all path push contain it
         final static String FLAG = "src\\main\\res\\raw\\baseconfig.xml";
@@ -63,27 +59,37 @@ public class Aop {
 
         }
 
-        System.out.println("Find config xml :" + xml);
+        //get module's name
+        final String[] tmp = xml.replace("/", "\\").replace(SUFFIX.FLAG, "").split("\\\\");
+        final String module = tmp[tmp.length - 1];
+
+        System.out.println("Find config xml :" + xml + ", and target module is " + module);
+
 
         // step 2
         ArrayList<String> keys = XmlHelper.parse(xml);
 
         File f = null;
-        String path = commonpath;
-        for (String dir : APPS) {
-            if (new File(dir).exists()) {
-                path = commonpath.replace("common", dir);
-                packageName = packageName.replace("common", dir);
-                f = new File(path);
-                if (f.exists()) {
-                    long time = f.lastModified();
-                    if (time == updateTime) {
-                        System.out.println("not need to re build :" + path);
+        String path = commonpath.replace("common", module);
+        //find default dir
+        if (new File(path).exists()) {
+            packageName = packageName.replace("common", module);
+            f = new File(path);
+            if (f.exists()) {
+                long time = f.lastModified();
+                if (time == updateTime) {
+                    System.out.println("not need to re build :" + path);
+                    return;
+                }
+                f.delete();
+            } else {
+                String parent = new File(path).getParent();
+                if (!new File(parent).exists()) {
+                    if (!new File(parent).mkdirs()) {
+                        System.out.println("Faied to make dir : " + parent);
                         return;
                     }
-                    f.delete();
                 }
-                break;
             }
         }
 
