@@ -71,6 +71,15 @@ public class Aop {
 
         File f = null;
         String path = commonpath.replace("common", module);
+        String parent = path.replace("\\Request.java", "");
+        try {
+            if (!new File(parent).exists() && !new File(parent).mkdirs()) {
+                System.out.println("Faied to make dir : " + parent);
+                return;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         //find default dir
         if (new File(path).exists()) {
             packageName = packageName.replace("common", module);
@@ -82,18 +91,10 @@ public class Aop {
                     return;
                 }
                 f.delete();
-            } else {
-                String parent = new File(path).getParent();
-                if (!new File(parent).exists()) {
-                    if (!new File(parent).mkdirs()) {
-                        System.out.println("Faied to make dir : " + parent);
-                        return;
-                    }
-                }
             }
         }
 
-        System.out.println("begin to write:" + f.getAbsolutePath());
+        System.out.println("begin to write:" + path);
 
         FileWriter fileWriter = null;
         BufferedWriter writer = null;
