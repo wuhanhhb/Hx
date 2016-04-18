@@ -1,0 +1,56 @@
+apply plugin: 'java'
+apply plugin: 'com.github.dcendents.android-maven'
+
+group='com.github.sxhebing'
+
+targetCompatibility = '1.7'
+sourceCompatibility = '1.7'
+//
+//repositories {
+//    maven { url "https://jitpack.io" }
+//}
+//
+//dependencies {
+//}
+//
+//tasks.withType(JavaCompile) {
+//    options.compilerArgs << "-Xlint:deprecation" << "-Xlint:unchecked"
+//}
+//
+//apply plugin: 'com.novoda.bintray-release'
+//
+//def getRepositoryUsername() {
+//    return hasProperty('BINTRAY_USER') ? BINTRAY_USER : ""
+//}
+//
+//def getRepositoryPassword() {
+//    return hasProperty('BINTRAY_KEY') ? BINTRAY_KEY : ""
+//}
+//
+//publish {
+//    userOrg = 'hx'
+//    groupId = 'com.huaxin.saop'
+//    artifactId = 'saop'
+//    publishVersion = '1.0.0'
+//    desc = 'java-util'
+//    website = 'https://github.com/wuhanhhb/Hx/java-util'
+//    bintrayUser = getRepositoryUsername()
+//    bintrayKey = getRepositoryPassword()
+//    dryRun = false
+//}
+//
+//task sourcesJar(type: Jar) {
+//    classifier = 'sources'
+//    from sourceSets.main.allJava
+//}
+//
+//// build a jar with javadoc
+//task javadocJar(type: Jar, dependsOn: javadoc) {
+//    classifier = 'javadoc'
+//    from javadoc.destinationDir
+//}
+//
+//artifacts {
+//    archives sourcesJar
+//    archives javadocJar
+//}
