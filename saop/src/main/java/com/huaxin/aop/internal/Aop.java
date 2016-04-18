@@ -38,7 +38,8 @@ public class Aop {
         for (File find : files)
             System.out.println("Find : " + find.getAbsolutePath());
         if (files.size() == 0) {
-            throw new RuntimeException("Not find any baseconfig.xml");
+            System.out.println("Not find any baseconfig.xml");
+            return;
         } else if (files.size() == 1) {
             xml = files.get(0).getAbsolutePath();
         } else if (files.size() == 2) {
@@ -139,6 +140,16 @@ public class Aop {
             }
         } else {
             for (File f : root.listFiles()) {
+                if (f.isDirectory() && (
+                        f.getName().equals("build")
+                                || f.getName().equals("java")
+                                || f.getName().equals("gradle")
+                                || f.getName().equals(".gradle")
+                                || f.getName().equals(".idea")
+                )) {
+                    System.out.print("Skip " + f.getName() + " \t");
+                    continue;
+                }
                 searchAllXML(f, result);
             }
         }
@@ -177,8 +188,9 @@ public class Aop {
         }
 
         public void brewJava(Filer filer) {
+            System.out.println("brewJava 1:" + classFqcn);
             aopMap();
-            System.out.println("brewJava:" + classFqcn);
+            System.out.println("brewJava 2:" + classFqcn);
             // JavaFileManager.Location location =
             // StandardLocation.locationFor(StandardLocation.SOURCE_PATH);
             // JavaFileManager.Location location = new

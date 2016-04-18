@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/HxGit.iml" filepath="$PROJECT_DIR$/HxGit.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Hx.iml" filepath="$PROJECT_DIR$/Hx.iml" />
       <module fileurl="file://$PROJECT_DIR$/saop/saop.iml" filepath="$PROJECT_DIR$/saop/saop.iml" />
     </modules>
   </component>
