@@ -93,11 +93,6 @@ public class Aop {
             }
         }
 
-        if (f == null) {
-            System.out.println("You must specail on project!");
-            return;
-        }
-
         System.out.println("begin to write:" + f.getAbsolutePath());
 
         FileWriter fileWriter = null;
