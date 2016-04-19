@@ -22,38 +22,46 @@ import javax.xml.xpath.XPathFactory;
  */
 public class XmlHelper {
 
-	public static ArrayList<String> parse(String path) {
-		ArrayList<String> results = new ArrayList<>();
-		InputStream in = null;
-		try {
-			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-			DocumentBuilder builder = dbf.newDocumentBuilder();
-			in = new FileInputStream(path);
-			Document doc = builder.parse(in);
-			XPathFactory factory = XPathFactory.newInstance();
-			XPath xpath = factory.newXPath();
-			XPathExpression expr = xpath.compile("/props/requests/request");
-			NodeList nodes = (NodeList) expr.evaluate(doc,
-					XPathConstants.NODESET);
-			for (int i = 0; i < nodes.getLength(); i++) {
-				Node node = nodes.item(i);
-				NamedNodeMap params = node.getAttributes();
-				results.add(params.getNamedItem("alia").getNodeValue());
-			}
-			in.close();
-			in = null;
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if (in != null)
-				try {
-					in.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-		}
+    public static ArrayList<String> parse(String path) {
+        ArrayList<String> results = new ArrayList<>();
+        InputStream in = null;
+        try {
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = dbf.newDocumentBuilder();
+            in = new FileInputStream(path);
+            Document doc = builder.parse(in);
+            XPathFactory factory = XPathFactory.newInstance();
+            XPath xpath = factory.newXPath();
+            /**
+             * Such as
+             * <props>
+             * 		<requests>
+             * 		 		<request alia="xxx" action="xxx" params="xxx&xxx" />
+             * 		</requests>
+             * </props>
+             */
+            XPathExpression expr = xpath.compile("/props/requests/request");
+            NodeList nodes = (NodeList) expr.evaluate(doc,
+                    XPathConstants.NODESET);
+            for (int i = 0; i < nodes.getLength(); i++) {
+                Node node = nodes.item(i);
+                NamedNodeMap params = node.getAttributes();
+                results.add(params.getNamedItem("alia").getNodeValue());
+            }
+            in.close();
+            in = null;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (in != null)
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+        }
 
-		return results;
-	}
+        return results;
+    }
 
 }

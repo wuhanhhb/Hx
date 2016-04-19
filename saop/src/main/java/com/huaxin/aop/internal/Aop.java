@@ -30,10 +30,13 @@ public class Aop {
 
     private static long updateTime = 0;
 
-    public static void aopMap() {
+    public static void requestMap() {
         String xml = null;
-        // step 1 find all baseconfig.xml
-        ArrayList<File> files = new ArrayList<File>();
+        /**
+         * step 1 find all baseconfig.xml,it should in res/raw/
+         * lt's level => you module > default module > common module
+         * */
+        ArrayList<File> files = new ArrayList<>();
         searchAllXML(new File("."), files);
         for (File find : files)
             System.out.println("Find : " + find.getAbsolutePath());
@@ -59,7 +62,10 @@ public class Aop {
             }
 
         }
-
+        if (xml == null) {
+            System.out.println("Didn't find any config on raw!");
+            return;
+        }
         //get module's name
         final String[] tmp = xml.replace("/", "\\").replace(SUFFIX.FLAG, "").split("\\\\");
         final String module = tmp[tmp.length - 1];
@@ -70,7 +76,6 @@ public class Aop {
         // step 2
         ArrayList<String> keys = XmlHelper.parse(xml);
 
-        File f = null;
         String path = commonpath.replace("common", module);
         String parent = path.replace("\\Request.java", "");
         try {
@@ -84,14 +89,16 @@ public class Aop {
         //find default dir
         if (new File(path).exists()) {
             packageName = packageName.replace("common", module);
-            f = new File(path);
+            File f = new File(path);
             if (f.exists()) {
                 long time = f.lastModified();
                 if (time == updateTime) {
                     System.out.println("not need to re build :" + path);
                     return;
                 }
-                f.delete();
+                if (!f.delete()) {
+                    System.out.println("delete file failed!");
+                }
             }
         }
 
@@ -117,18 +124,23 @@ public class Aop {
             writeLine(writer, "}");
             writer.flush();
             writer.close();
+            fileWriter.close();
             writer = null;
+            fileWriter = null;
             // record it~
             updateTime = new File(path).lastModified();
         } catch (Exception e) {
-            System.out.println(e == null ? "" : e.getMessage());
+            System.out.println(e.getMessage());
         } finally {
             try {
                 if (writer != null) {
                     writer.close();
                 }
+                if (fileWriter != null) {
+                    fileWriter.close();
+                }
             } catch (Exception ee) {
-                System.out.println(ee == null ? "" : ee.getMessage());
+                System.out.println(ee.getMessage());
             }
         }
     }
@@ -139,6 +151,7 @@ public class Aop {
                 result.add(root);
             }
         } else {
+            if (root.listFiles() == null) return;
             for (File f : root.listFiles()) {
                 if (f.isDirectory() && (
                         f.getName().equals("build")
@@ -147,6 +160,9 @@ public class Aop {
                                 || f.getName().equals(".gradle")
                                 || f.getName().equals(".idea")
                 )) {
+                    /**
+                     * we don't need to search there dir
+                     */
                     System.out.print("Skip " + f.getName() + " \t");
                     continue;
                 }
@@ -188,9 +204,8 @@ public class Aop {
         }
 
         public void brewJava(Filer filer) {
-            System.out.println("brewJava 1:" + classFqcn);
-            aopMap();
-            System.out.println("brewJava 2:" + classFqcn);
+            System.out.println("brewJava :" + classFqcn);
+            requestMap();
             // JavaFileManager.Location location =
             // StandardLocation.locationFor(StandardLocation.SOURCE_PATH);
             // JavaFileManager.Location location = new
